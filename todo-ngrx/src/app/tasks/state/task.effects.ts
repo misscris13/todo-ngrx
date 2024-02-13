@@ -16,7 +16,7 @@ export class TaskEffects {
       ofType(TaskActions.loadTasks),
       mergeMap(() =>
         this.taskService.getTasks().pipe(
-          map((tasks) => TaskActions.loadTasksSuccess({ tasks })),
+          map(tasks => TaskActions.loadTasksSuccess({ tasks })),
           catchError(error => of(TaskActions.loadTasksFail({ error })))
         ))
     );

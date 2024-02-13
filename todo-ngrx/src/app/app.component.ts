@@ -9,7 +9,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   imports: [
-    CommonModule, RouterLink, RouterOutlet, RouterLinkActive
+    CommonModule,
+    RouterLink,
+    RouterOutlet,
+    RouterLinkActive
   ]
 })
 export class AppComponent {

@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+.card-wrapper {
+  width: 40vw;
+  margin: auto;
+}
+
+mat-card {
+  margin: 15px;
+}

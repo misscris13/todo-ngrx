@@ -4,6 +4,10 @@ import * as TaskActions from "./task.actions";
 import * as AppState from "../../state/app.state";
 
 // ----- STATE -----
+export interface State extends AppState.State {
+  tasks: TaskState;
+}
+
 export interface TaskState {
   tasks: Task[];
   error: string;
@@ -14,12 +18,8 @@ const initialState: TaskState = {
   error: ""
 };
 
-export interface State extends AppState.State {
-  tasks: [];
-}
-
 // ----- SELECTORS -----
-const getTaskFeatureState = createFeatureSelector<TaskState>("tasks");
+const getTaskFeatureState = createFeatureSelector<TaskState>('tasks');
 
 export const getTasks = createSelector(
   getTaskFeatureState,

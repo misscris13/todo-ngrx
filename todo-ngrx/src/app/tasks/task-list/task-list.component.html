@@ -1,0 +1,19 @@
+<body>
+  <div class="card-wrapper" *ngIf="tasks$ | ngrxPush as tasks">
+    <mat-card *ngFor="let task of tasks">
+        <mat-card-header>
+            <mat-card-title> {{ task.name }} </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            {{ task.description }}
+        </mat-card-content>
+        <mat-card-actions align="start">
+          <mat-slide-toggle color="primary" (change)="checkChanged(task)"></mat-slide-toggle>
+        </mat-card-actions>
+    </mat-card>
+  </div>
+</body>
+
+<div *ngIf="errorMessage$ | ngrxPush as errorMessage">
+  Error: {{ errorMessage | json }}
+</div>

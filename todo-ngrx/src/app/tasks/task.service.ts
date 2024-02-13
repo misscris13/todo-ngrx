@@ -15,8 +15,8 @@ export class TaskService {
   getTasks(): Observable<Task[]> {
     return this.http.get<Task[]>(this.tasksUrl)
       .pipe(
-        tap(data => console.log(JSON.stringify(data))),
-        catchError(this.handleError)
+        tap(data => console.log("e: " + JSON.stringify(data))),
+        // catchError(this.handleError)
       );
   }
 
@@ -41,6 +41,7 @@ export class TaskService {
     }
 
     console.error(err);
+    console.log(err.error.message);
     return throwError(errorMessage);
   }
 }
