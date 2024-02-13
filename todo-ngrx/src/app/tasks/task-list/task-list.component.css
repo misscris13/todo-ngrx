@@ -3,6 +3,17 @@ body {
   overflow: hidden;
 }
 
+.spinner {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+}
+
+mat-spinner {
+  margin: auto;
+}
+
 .card-wrapper {
   width: 40vw;
   margin: auto;
@@ -10,4 +21,8 @@ body {
 
 mat-card {
   margin: 15px;
+}
+
+mat-slide-toggle {
+  margin-left: 10px;
 }

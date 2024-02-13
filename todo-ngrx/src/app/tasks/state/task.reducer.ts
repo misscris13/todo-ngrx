@@ -2,6 +2,15 @@ import { createFeatureSelector, createReducer, createSelector, on } from "@ngrx/
 import { Task } from "../task";
 import * as TaskActions from "./task.actions";
 import * as AppState from "../../state/app.state";
+import { MatSnackBar } from "@angular/material/snack-bar";
+
+export enum ViewStatus {
+  Initial = 'INITIAL',
+  Loading = 'LOADING',
+  Loaded = 'LOADED',
+  Success = 'SUCCESS',
+  Failure = 'FAILURE'
+};
 
 // ----- STATE -----
 export interface State extends AppState.State {
@@ -11,11 +20,17 @@ export interface State extends AppState.State {
 export interface TaskState {
   tasks: Task[];
   error: string;
+  viewStatus: ViewStatus;
+  // loading: boolean;
+  // loaded: boolean;
 }
 
 const initialState: TaskState = {
   tasks: [],
-  error: ""
+  error: "",
+  viewStatus: ViewStatus.Initial,
+  // loading: true,
+  // loaded: false
 };
 
 // ----- SELECTORS -----
@@ -31,14 +46,40 @@ export const getError = createSelector(
   (state) => state.error
 );
 
+export const getViewStatus = createSelector(
+  getTaskFeatureState,
+  (state) => state.viewStatus
+);
+
+// export const getLoading = createSelector(
+//   getTaskFeatureState,
+//   (state) => state.loading
+// );
+
+// export const getLoaded = createSelector(
+//   getTaskFeatureState,
+//   (state) => state.loaded
+// );
+
 // ----- REDUCER -----
 export const taskReducer = createReducer<TaskState>(
   initialState,
+
+  on(TaskActions.loadTasks, (state, action): TaskState => {
+    return {
+      ...state,
+      viewStatus: ViewStatus.Loading
+    };
+  }),
+
   on(TaskActions.loadTasksSuccess, (state, action): TaskState => {
     return {
       ...state,
       tasks: action.tasks,
       error: "",
+      // loading: false,
+      // loaded: true,
+      viewStatus: ViewStatus.Loaded
     };
   }),
 
@@ -47,6 +88,16 @@ export const taskReducer = createReducer<TaskState>(
       ...state,
       tasks: [],
       error: action.error,
+      // loading: false,
+      // loaded: false
+      viewStatus: ViewStatus.Loaded
+    };
+  }),
+
+  on(TaskActions.updateTask, (state, action): TaskState => {
+    return {
+      ...state,
+      viewStatus: ViewStatus.Loading
     };
   }),
 
@@ -58,14 +109,20 @@ export const taskReducer = createReducer<TaskState>(
     return {
       ...state,
       tasks: updatedTasks,
-      error: ""
+      error: "",
+      // loading: false,
+      // loaded: true
+      viewStatus: ViewStatus.Success,
     };
   }),
 
   on(TaskActions.updateTaskFail, (state, action): TaskState => {
     return {
       ...state,
-      error: action.error
+      error: action.error,
+      // loading: false,
+      // loaded: false
+      viewStatus: ViewStatus.Failure
     };
   })
 )

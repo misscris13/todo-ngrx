@@ -15,7 +15,7 @@ export class DataService implements InMemoryDbService {
           id: 1,
           name: "Initialize project",
           description: "Create the project and install the dependencies",
-          completed: false
+          completed: true
         },
         {
           id: 2,

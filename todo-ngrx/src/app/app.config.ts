@@ -22,7 +22,7 @@ export const appConfig: ApplicationConfig = {
         maxAge: 25
       }),
       EffectsModule.forRoot([]),
-      InMemoryWebApiModule.forRoot(DataService, { delay: 0}),
+      InMemoryWebApiModule.forRoot(DataService, { delay: 1000}),
       ),
   ]
 };

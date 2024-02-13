@@ -1,16 +1,22 @@
 <body>
-  <div class="card-wrapper" *ngIf="tasks$ | ngrxPush as tasks">
-    <mat-card *ngFor="let task of tasks">
-        <mat-card-header>
-            <mat-card-title> {{ task.name }} </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            {{ task.description }}
-        </mat-card-content>
-        <mat-card-actions align="start">
-          <mat-slide-toggle color="primary" (change)="checkChanged(task)"></mat-slide-toggle>
-        </mat-card-actions>
-    </mat-card>
+  <div class="spinner" *ngIf="loading$ | ngrxPush">
+    <mat-spinner color="accent"></mat-spinner>
+  </div>
+
+  <div class="content" *ngIf="loaded$">
+    <div class="card-wrapper" *ngIf="tasks$ | ngrxPush as tasks">
+      <mat-card *ngFor="let task of tasks">
+          <mat-card-header>
+              <mat-card-title> {{ task.name }} </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+              {{ task.description }}
+          </mat-card-content>
+          <mat-card-actions align="start">
+            <mat-slide-toggle color="primary" [checked]="task.completed" (change)="checkChanged(task)"></mat-slide-toggle>
+          </mat-card-actions>
+      </mat-card>
+    </div>
   </div>
 </body>
 
