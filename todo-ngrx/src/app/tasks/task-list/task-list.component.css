@@ -26,3 +26,42 @@ mat-card {
 mat-slide-toggle {
   margin-left: 10px;
 }
+
+.filterForm {
+  width: 50vw;
+  height: 8vh;
+  margin: auto;
+  background-color: white;
+  border-radius: 0 0 7px 7px;
+  padding: 15px;
+  display: flex;
+}
+
+h2 {
+  margin-bottom: 0px;
+  display: block;
+}
+
+mat-form-field {
+  height: 7vh;
+  padding: 0;
+}
+
+.formSection {
+  width: 40%;
+}
+
+#submit {
+  padding-right: 3vw;
+  width: 20%
+}
+
+button {
+  width: 7vw;
+  height: 7vh;
+  float: right;
+}
+
+#title {
+  margin-left: 0;
+}

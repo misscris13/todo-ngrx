@@ -5,8 +5,13 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggle } from "@angular/material/slide-toggle";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatChipsModule } from '@angular/material/chips';
+import { MatInputModule } from "@angular/material/input";
+import { MatButtonModule } from '@angular/material/button';
+import { FormControl, ReactiveFormsModule  } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Observable, filter, of, skipWhile, take, tap } from 'rxjs';
+import { Observable, filter, of, skipWhile } from 'rxjs';
 import { State, ViewStatus, getError, getTasks, getViewStatus } from '../state/task.reducer';
 import { Task } from '../task';
 import { PushPipe } from "@ngrx/component";
@@ -25,9 +30,14 @@ import { TaskModule } from '../tasks.module'
     MatCardModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatChipsModule,
+    MatInputModule,
+    MatButtonModule,
+    ReactiveFormsModule,
     PushPipe,
     TaskModule,
-    CommonModule,
+    CommonModule
   ],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.css',
@@ -43,6 +53,10 @@ export class TaskListComponent implements OnInit {
 
   loading$: Observable<boolean>;
   loaded$: Observable<boolean>;
+
+  searchComplete = new FormControl(true);
+  searchIncomplete = new FormControl(true);
+  taskTitle = new FormControl("");
 
   constructor(private store: Store<State>, private taskService: TaskService, private _snackbar: MatSnackBar) {}
 
@@ -63,6 +77,18 @@ export class TaskListComponent implements OnInit {
 
   checkChanged(task: Task): void {
     this.store.dispatch(TaskActions.updateTask({ task }));
+  }
+
+  toggleSearchComplete(): void {
+    this.searchComplete.setValue(!this.searchComplete);
+  }
+
+  toggleSearchIncomplete(): void {
+    this.searchIncomplete.setValue(!this.searchIncomplete);
+  }
+
+  filter(): void {
+
   }
 
   handleViewStatus(): void {

@@ -3,6 +3,27 @@
     <mat-spinner color="accent"></mat-spinner>
   </div>
 
+  <div class="filterForm">
+    <div id="chipList" class="formSection">
+      <mat-label><h2>Task completion</h2></mat-label>
+      <mat-chip-listbox aria-label="Completion" multiple>
+        <mat-chip-option (click)="toggleSearchComplete()" selected>Complete</mat-chip-option>
+        <mat-chip-option (click)="toggleSearchIncomplete()" selected>Incomplete</mat-chip-option>
+      </mat-chip-listbox>
+    </div>
+
+    <div id="title" class="formSection">
+      <mat-label><h2>Task title</h2></mat-label>
+      <mat-form-field>
+        <input matInput [formControl]="taskTitle">
+      </mat-form-field>
+    </div>
+
+    <div id="submit" class="formSection">
+      <button mat-raised-button color="primary" (click)="filter()">Filter</button>
+    </div>
+  </div>
+
   <div class="content" *ngIf="loaded$">
     <div class="card-wrapper" *ngIf="tasks$ | ngrxPush as tasks">
       <mat-card *ngFor="let task of tasks">
