@@ -29,3 +29,16 @@ export const updateTaskFail = createAction(
   "[Task] Update Task Fail",
   props<{ error: string}>()
 );
+
+export const toggleShowComplete = createAction(
+  "[Task Filter] Toggle Show Complete"
+);
+
+export const toggleShowIncomplete = createAction(
+  "[Task Filter] Toggle Show Incomplete"
+);
+
+export const updateTitleFilter = createAction(
+  "[Task Filter] Change Title Filter",
+  props<{ titleFilter: string }>()
+);

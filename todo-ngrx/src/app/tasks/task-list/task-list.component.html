@@ -7,26 +7,26 @@
     <div id="chipList" class="formSection">
       <mat-label><h2>Task completion</h2></mat-label>
       <mat-chip-listbox aria-label="Completion" multiple>
-        <mat-chip-option (click)="toggleSearchComplete()" selected>Complete</mat-chip-option>
-        <mat-chip-option (click)="toggleSearchIncomplete()" selected>Incomplete</mat-chip-option>
+        <mat-chip-option (click)="toggleShowComplete()" [selected]="showComplete()">Complete</mat-chip-option>
+        <mat-chip-option (click)="toggleShowIncomplete()" [selected]="showIncomplete()">Incomplete</mat-chip-option>
       </mat-chip-listbox>
     </div>
 
     <div id="title" class="formSection">
       <mat-label><h2>Task title</h2></mat-label>
       <mat-form-field>
-        <input matInput [formControl]="taskTitle">
+        <input matInput [(ngModel)]="titleFilter">
       </mat-form-field>
     </div>
 
     <div id="submit" class="formSection">
-      <button mat-raised-button color="primary" (click)="filter()">Filter</button>
+      <button mat-raised-button color="primary" type="submit" (click)="changeTitleFilter()">Filter</button>
     </div>
   </div>
 
-  <div class="content" *ngIf="loaded$">
-    <div class="card-wrapper" *ngIf="tasks$ | ngrxPush as tasks">
-      <mat-card *ngFor="let task of tasks">
+  <div class="content">
+    <div class="card-wrapper">
+      <mat-card *ngFor="let task of filteredTasks()">
           <mat-card-header>
               <mat-card-title> {{ task.name }} </mat-card-title>
           </mat-card-header>

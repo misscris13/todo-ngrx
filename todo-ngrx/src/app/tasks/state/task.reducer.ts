@@ -3,6 +3,7 @@ import { Task } from "../task";
 import * as TaskActions from "./task.actions";
 import * as AppState from "../../state/app.state";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { map } from "rxjs";
 
 export enum ViewStatus {
   Initial = 'INITIAL',
@@ -21,16 +22,18 @@ export interface TaskState {
   tasks: Task[];
   error: string;
   viewStatus: ViewStatus;
-  // loading: boolean;
-  // loaded: boolean;
+  showComplete: boolean;
+  showIncomplete: boolean;
+  titleFilter: string;
 }
 
 const initialState: TaskState = {
   tasks: [],
   error: "",
   viewStatus: ViewStatus.Initial,
-  // loading: true,
-  // loaded: false
+  showComplete: true,
+  showIncomplete: true,
+  titleFilter: ""
 };
 
 // ----- SELECTORS -----
@@ -51,21 +54,37 @@ export const getViewStatus = createSelector(
   (state) => state.viewStatus
 );
 
-// export const getLoading = createSelector(
-//   getTaskFeatureState,
-//   (state) => state.loading
-// );
+export const getFilteredTasks = createSelector(
+  getTaskFeatureState,
+  (state) => state.tasks.filter(
+    task =>
+      ((task.completed === state.showComplete)
+      || (task.completed !== state.showIncomplete))
+      && (task.name.includes(state.titleFilter))
+  )
+);
 
-// export const getLoaded = createSelector(
-//   getTaskFeatureState,
-//   (state) => state.loaded
-// );
+export const getShowComplete = createSelector(
+  getTaskFeatureState,
+  (state) => state.showComplete
+);
+
+export const getShowIncomplete = createSelector(
+  getTaskFeatureState,
+  (state) => state.showIncomplete
+);
+
+export const getTitleFilter = createSelector(
+  getTaskFeatureState,
+  (state) => state.titleFilter
+);
+
 
 // ----- REDUCER -----
 export const taskReducer = createReducer<TaskState>(
   initialState,
 
-  on(TaskActions.loadTasks, (state, action): TaskState => {
+  on(TaskActions.loadTasks, (state): TaskState => {
     return {
       ...state,
       viewStatus: ViewStatus.Loading
@@ -77,8 +96,6 @@ export const taskReducer = createReducer<TaskState>(
       ...state,
       tasks: action.tasks,
       error: "",
-      // loading: false,
-      // loaded: true,
       viewStatus: ViewStatus.Loaded
     };
   }),
@@ -88,13 +105,11 @@ export const taskReducer = createReducer<TaskState>(
       ...state,
       tasks: [],
       error: action.error,
-      // loading: false,
-      // loaded: false
       viewStatus: ViewStatus.Loaded
     };
   }),
 
-  on(TaskActions.updateTask, (state, action): TaskState => {
+  on(TaskActions.updateTask, (state): TaskState => {
     return {
       ...state,
       viewStatus: ViewStatus.Loading
@@ -110,8 +125,6 @@ export const taskReducer = createReducer<TaskState>(
       ...state,
       tasks: updatedTasks,
       error: "",
-      // loading: false,
-      // loaded: true
       viewStatus: ViewStatus.Success,
     };
   }),
@@ -120,9 +133,28 @@ export const taskReducer = createReducer<TaskState>(
     return {
       ...state,
       error: action.error,
-      // loading: false,
-      // loaded: false
       viewStatus: ViewStatus.Failure
     };
-  })
+  }),
+
+  on(TaskActions.toggleShowComplete, (state): TaskState => {
+    return {
+      ...state,
+      showComplete: !state.showComplete
+    };
+  }),
+
+  on(TaskActions.toggleShowIncomplete, (state): TaskState => {
+    return {
+      ...state,
+      showIncomplete: !state.showIncomplete
+    };
+  }),
+
+  on(TaskActions.updateTitleFilter, (state, action): TaskState => {
+    return {
+      ...state,
+      titleFilter: action.titleFilter
+    };
+  }),
 )

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Signal } from '@angular/core';
 import { MatListModule } from "@angular/material/list";
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
@@ -9,10 +9,10 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from '@angular/material/button';
-import { FormControl, ReactiveFormsModule  } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable, filter, of, skipWhile } from 'rxjs';
-import { State, ViewStatus, getError, getTasks, getViewStatus } from '../state/task.reducer';
+import { State, ViewStatus, getError, getFilteredTasks, getShowComplete, getShowIncomplete, getTasks, getViewStatus } from '../state/task.reducer';
 import { Task } from '../task';
 import { PushPipe } from "@ngrx/component";
 import * as TaskActions from "../state/task.actions";
@@ -35,6 +35,7 @@ import { TaskModule } from '../tasks.module'
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
+    FormsModule,
     PushPipe,
     TaskModule,
     CommonModule
@@ -47,24 +48,25 @@ import { TaskModule } from '../tasks.module'
 export class TaskListComponent implements OnInit {
   pageTitle = "Tasks";
 
-  tasks$: Observable<Task[]>;
-  tasks: Task[];
   errorMessage$: Observable<string>;
 
   loading$: Observable<boolean>;
   loaded$: Observable<boolean>;
 
-  searchComplete = new FormControl(true);
-  searchIncomplete = new FormControl(true);
-  taskTitle = new FormControl("");
+  tasks: Signal<Task[]> = this.store.selectSignal(getTasks);
+  filteredTasks: Signal<Task[]>;
 
-  constructor(private store: Store<State>, private taskService: TaskService, private _snackbar: MatSnackBar) {}
+  titleFilter: string = "";
+  showComplete: Signal<boolean>;
+  showIncomplete: Signal<boolean>;
+
+  constructor(private store: Store<State>, private taskService: TaskService, private _snackbar: MatSnackBar, private fb: FormBuilder) {}
 
   ngOnInit(): void {
 
-    this.tasks$ = this.store.select(getTasks);
-
     this.errorMessage$ = this.store.select(getError);
+
+    this.filteredTasks = this.store.selectSignal(getFilteredTasks);
 
     this.store.dispatch(TaskActions.loadTasks());
 
@@ -73,22 +75,35 @@ export class TaskListComponent implements OnInit {
     this.loading$ = of(true);
 
     this.loaded$ = of(false);
+
+    this.showComplete = this.store.selectSignal(getShowComplete);
+    this.showIncomplete = this.store.selectSignal(getShowIncomplete);
   }
 
   checkChanged(task: Task): void {
-    this.store.dispatch(TaskActions.updateTask({ task }));
+    const newTask = { ...task, completed: !task.completed}
+
+    this.store.dispatch(TaskActions.updateTask({ task: newTask }));
   }
 
-  toggleSearchComplete(): void {
-    this.searchComplete.setValue(!this.searchComplete);
+  toggleShowComplete(): void {
+    this.store.dispatch(TaskActions.toggleShowComplete());
+
+    if (!this.showComplete() && !this.showIncomplete()) {
+      this.toggleShowIncomplete();
+    }
   }
 
-  toggleSearchIncomplete(): void {
-    this.searchIncomplete.setValue(!this.searchIncomplete);
+  toggleShowIncomplete(): void {
+    this.store.dispatch(TaskActions.toggleShowIncomplete());
+
+    if (!this.showComplete() && !this.showIncomplete()) {
+      this.toggleShowComplete();
+    }
   }
 
-  filter(): void {
-
+  changeTitleFilter(): void {
+    this.store.dispatch(TaskActions.updateTitleFilter({ titleFilter: this.titleFilter }));
   }
 
   handleViewStatus(): void {
