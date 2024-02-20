@@ -3,39 +3,58 @@
     <mat-spinner color="accent"></mat-spinner>
   </div>
 
-  <div class="filterForm">
-    <div id="chipList" class="formSection">
-      <mat-label><h2>Task completion</h2></mat-label>
-      <mat-chip-listbox aria-label="Completion" multiple>
-        <mat-chip-option (click)="toggleShowComplete()" [selected]="showComplete()">Complete</mat-chip-option>
-        <mat-chip-option (click)="toggleShowIncomplete()" [selected]="showIncomplete()">Incomplete</mat-chip-option>
-      </mat-chip-listbox>
-    </div>
-
-    <div id="title" class="formSection">
-      <mat-label><h2>Task title</h2></mat-label>
-      <mat-form-field>
-        <input matInput [(ngModel)]="titleFilter">
-      </mat-form-field>
-    </div>
-
-    <div id="submit" class="formSection">
-      <button mat-raised-button color="primary" type="submit" (click)="changeTitleFilter()">Filter</button>
-    </div>
-  </div>
-
   <div class="content">
+    <div class="filterForm">
+      <div id="chipList" class="formSection">
+        <h2>Task completion</h2>
+        <mat-chip-listbox aria-label="Completion" multiple>
+          <mat-chip-option
+            (click)="toggleShowComplete()"
+            [selected]="showComplete()"
+            >Complete</mat-chip-option
+          >
+          <mat-chip-option
+            (click)="toggleShowIncomplete()"
+            [selected]="showIncomplete()"
+            >Incomplete</mat-chip-option
+          >
+        </mat-chip-listbox>
+      </div>
+
+      <div id="title" class="formSection">
+        <h2>Task title</h2>
+        <mat-form-field>
+          <input matInput [(ngModel)]="titleFilter" />
+        </mat-form-field>
+      </div>
+
+      <div id="submit" class="formSection">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          (click)="changeTitleFilter()"
+        >
+          Filter
+        </button>
+      </div>
+    </div>
+
     <div class="card-wrapper">
       <mat-card *ngFor="let task of filteredTasks()">
-          <mat-card-header>
-              <mat-card-title> {{ task.name }} </mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-              {{ task.description }}
-          </mat-card-content>
-          <mat-card-actions align="start">
-            <mat-slide-toggle color="primary" [checked]="task.completed" (change)="checkChanged(task)"></mat-slide-toggle>
-          </mat-card-actions>
+        <mat-card-header>
+          <mat-card-title> {{ task.name }} </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          {{ task.description }}
+        </mat-card-content>
+        <mat-card-actions align="start">
+          <mat-slide-toggle
+            color="primary"
+            [checked]="task.completed"
+            (change)="checkChanged(task)"
+          ></mat-slide-toggle>
+        </mat-card-actions>
       </mat-card>
     </div>
   </div>

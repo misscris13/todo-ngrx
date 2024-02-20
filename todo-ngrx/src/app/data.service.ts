@@ -34,6 +34,36 @@ export class DataService implements InMemoryDbService {
           name: "Hand in the project",
           description: "Report project progress",
           completed: false
+        },
+        {
+          id: 5,
+          name: "Task name",
+          description: "Lorem ipsum dolor sit amet",
+          completed: true
+        },
+        {
+          id: 6,
+          name: "Task name",
+          description: "Lorem ipsum dolor sit amet",
+          completed: false
+        },
+        {
+          id: 7,
+          name: "Task name",
+          description: "Lorem ipsum dolor sit amet",
+          completed: false
+        },
+        {
+          id: 8,
+          name: "Task name",
+          description: "Lorem ipsum dolor sit amet",
+          completed: true
+        },
+        {
+          id: 9,
+          name: "Task name",
+          description: "Report project progress",
+          completed: true
         }
       ]
     }

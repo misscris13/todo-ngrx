@@ -60,7 +60,7 @@ export const getFilteredTasks = createSelector(
     task =>
       ((task.completed === state.showComplete)
       || (task.completed !== state.showIncomplete))
-      && (task.name.includes(state.titleFilter))
+      && (task.name.toLowerCase().includes(state.titleFilter.toLowerCase()))
   )
 );
 
