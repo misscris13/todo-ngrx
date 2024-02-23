@@ -3,61 +3,66 @@
     <mat-spinner color="accent"></mat-spinner>
   </div>
 
-  <div class="content">
-    <div class="filterForm">
-      <div id="chipList" class="formSection">
-        <h2>Task completion</h2>
-        <mat-chip-listbox aria-label="Completion" multiple>
-          <mat-chip-option
-            (click)="toggleShowComplete()"
-            [selected]="showComplete()"
-            >Complete</mat-chip-option
-          >
-          <mat-chip-option
-            (click)="toggleShowIncomplete()"
-            [selected]="showIncomplete()"
-            >Incomplete</mat-chip-option
-          >
-        </mat-chip-listbox>
-      </div>
+  <button mat-icon-button class="menu" color="accent" [hidden]="!sideNavButton" (click)="toggleSideNav()"><mat-icon>menu</mat-icon></button>
+  <mat-sidenav-container>
+    <mat-sidenav [mode]="sideNavMode" #sideNav [opened]="sideNavOpened" [fixedInViewport]="true">
+      <div class="filterForm">
+        <div id="chipList" class="formSection">
+          <h2>Task completion</h2>
+          <mat-chip-listbox aria-label="Completion" multiple>
+            <mat-chip-option
+              (click)="toggleShowComplete()"
+              [selected]="showComplete()"
+              >Complete</mat-chip-option
+            >
+            <mat-chip-option
+              (click)="toggleShowIncomplete()"
+              [selected]="showIncomplete()"
+              >Incomplete</mat-chip-option
+            >
+          </mat-chip-listbox>
+        </div>
 
-      <div id="title" class="formSection">
-        <h2>Task title</h2>
-        <mat-form-field>
-          <input matInput [(ngModel)]="titleFilter" />
-        </mat-form-field>
-      </div>
+        <div id="title" class="formSection">
+          <h2>Task title</h2>
+          <mat-form-field>
+            <input matInput placeholder="Title" [(ngModel)]="titleFilter" />
+          </mat-form-field>
+        </div>
 
-      <div id="submit" class="formSection">
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          (click)="changeTitleFilter()"
-        >
-          Filter
-        </button>
-      </div>
-    </div>
-
-    <div class="card-wrapper">
-      <mat-card *ngFor="let task of filteredTasks()">
-        <mat-card-header>
-          <mat-card-title> {{ task.name }} </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          {{ task.description }}
-        </mat-card-content>
-        <mat-card-actions align="start">
-          <mat-slide-toggle
+        <div id="submit" class="formSection">
+          <button
+            mat-raised-button
             color="primary"
-            [checked]="task.completed"
-            (change)="checkChanged(task)"
-          ></mat-slide-toggle>
-        </mat-card-actions>
-      </mat-card>
-    </div>
-  </div>
+            type="submit"
+            (click)="changeTitleFilter()"
+          >
+            Filter
+          </button>
+        </div>
+      </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <div class="card-wrapper">
+        <mat-card *ngFor="let task of filteredTasks()">
+          <mat-card-header>
+            <mat-card-title> {{ task.name }} </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            {{ task.description }}
+          </mat-card-content>
+          <mat-card-actions align="start">
+            <mat-slide-toggle
+              color="primary"
+              [checked]="task.completed"
+              (change)="checkChanged(task)"
+            ></mat-slide-toggle>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </body>
 
 <div *ngIf="errorMessage$ | ngrxPush as errorMessage">

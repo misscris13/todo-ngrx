@@ -9,6 +9,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from '@angular/material/button';
+import { MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav';
 import { FormBuilder, FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable, filter, of, skipWhile } from 'rxjs';
@@ -20,6 +21,7 @@ import { CommonModule } from '@angular/common';
 import { TaskService } from '../task.service';
 import { HttpClientModule } from '@angular/common/http';
 import { TaskModule } from '../tasks.module'
+import { HostListener } from "@angular/core";
 
 @Component({
   selector: 'app-task-list',
@@ -34,6 +36,7 @@ import { TaskModule } from '../tasks.module'
     MatChipsModule,
     MatInputModule,
     MatButtonModule,
+    MatSidenavModule,
     ReactiveFormsModule,
     FormsModule,
     PushPipe,
@@ -60,6 +63,11 @@ export class TaskListComponent implements OnInit {
   showComplete: Signal<boolean>;
   showIncomplete: Signal<boolean>;
 
+  sideNavMode: MatDrawerMode = ("side" as MatDrawerMode);
+  sideNavOpened: boolean = true;
+  sideNavButton: boolean = false;
+  screenWidth: number;
+
   constructor(private store: Store<State>, private taskService: TaskService, private _snackbar: MatSnackBar, private fb: FormBuilder) {}
 
   ngOnInit(): void {
@@ -78,6 +86,27 @@ export class TaskListComponent implements OnInit {
 
     this.showComplete = this.store.selectSignal(getShowComplete);
     this.showIncomplete = this.store.selectSignal(getShowIncomplete);
+
+    this.onResize();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.screenWidth = window.innerWidth;
+
+    if (this.screenWidth <= 1000) {
+      this.sideNavMode = "over" as MatDrawerMode;
+      this.sideNavOpened = false;
+      this.sideNavButton = true;
+    } else {
+      this.sideNavMode = "side" as MatDrawerMode;
+      this.sideNavOpened = true;
+      this.sideNavButton = false;
+    }
+  }
+
+  toggleSideNav(): void {
+    this.sideNavOpened = !this.sideNavOpened;
   }
 
   checkChanged(task: Task): void {
